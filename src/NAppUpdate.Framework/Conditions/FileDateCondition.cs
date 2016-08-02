@@ -23,6 +23,8 @@ namespace NAppUpdate.Framework.Conditions
 		[NauField("what", "Comparison action to perform. Accepted values: newer, is, older. Default: older.", false)]
 		public string ComparisonType { get; set; }
 
+		#region IUpdateCondition Members
+
 		public bool IsMet(Tasks.IUpdateTask task)
 		{
 			if (Timestamp == DateTime.MinValue)
@@ -31,21 +33,15 @@ namespace NAppUpdate.Framework.Conditions
 			string localPath = !string.IsNullOrEmpty(LocalPath)
 								   ? LocalPath
 								   : Utils.Reflection.GetNauAttribute(task, "LocalPath") as string;
-
-			// local path is invalid, we can't check for anything so we will return as if the condition was met
-			if (string.IsNullOrEmpty(localPath))
+			if (string.IsNullOrEmpty(localPath) || !File.Exists(localPath))
 				return true;
-
-			// if the file doesn't exist it has a null timestamp, and therefore the condition result depends on the ComparisonType
-			if (!File.Exists(localPath))
-				return ComparisonType.Equals("older", StringComparison.InvariantCultureIgnoreCase);
 
 			// File timestamps seem to be off by a little bit (conversion rounding?), so the code below
 			// gets around that
-			var dt = File.GetLastWriteTime(localPath);
-			var localPlus = dt.AddSeconds(2).ToFileTimeUtc();
-			var localMinus = dt.AddSeconds(-2).ToFileTimeUtc();
-			var remoteFileDateTime = Timestamp.ToFileTimeUtc();
+			DateTime dt = File.GetLastWriteTime(localPath);
+			long localPlus = dt.AddSeconds(2).ToFileTimeUtc();
+			long localMinus = dt.AddSeconds(-2).ToFileTimeUtc();
+			long remoteFileDateTime = Timestamp.ToFileTimeUtc();
 
 			bool result;
 			switch (ComparisonType)
@@ -62,5 +58,7 @@ namespace NAppUpdate.Framework.Conditions
 			}
 			return result;
 		}
+
+		#endregion
 	}
 }
