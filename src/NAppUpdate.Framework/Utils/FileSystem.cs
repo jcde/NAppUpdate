@@ -23,7 +23,7 @@ namespace NAppUpdate.Framework.Utils
 
 			for (int ix = 0; ix < loopCount; ix++)
 			{
-				string newPath = paths[0] + @"\";
+                string newPath = paths[0] + Path.DirectorySeparatorChar;
 				for (int add = 1; add <= ix; add++)
 					newPath = Path.Combine(newPath, paths[add]);
 				if (!Directory.Exists(newPath))
@@ -65,36 +65,45 @@ namespace NAppUpdate.Framework.Utils
 			return files;
 		}
 
-		/// <summary>
-		/// Returns true if read/write lock exists on the file, otherwise false
-		/// From http://stackoverflow.com/a/937558
-		/// </summary>
-		/// <param name="file">The file to check for a lock</param>
-		/// <returns></returns>
-		public static bool IsFileLocked(FileInfo file)
+		public static bool IsExeRunning(string path)
 		{
-			FileStream stream = null;
-
-			try
+			var processes = Process.GetProcesses();
+			foreach (Process p in processes)
 			{
-				stream = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+				if (p.MainModule.FileName.StartsWith(path, StringComparison.InvariantCultureIgnoreCase))
+					return true;
 			}
-			catch (IOException)
-			{
-				//the file is unavailable because it is:
-				//still being written to
-				//or being processed by another thread
-				//or does not exist (has already been processed)
-				return true;
-			}
-			finally
-			{
-				if (stream != null)
-					stream.Close();
-			}
-
-			//file is not locked
 			return false;
 		}
+
+        public static void MoveInplaceIfNeeded(string fileFrom, string fileTo, long bufferSize = 1024)
+        {
+            if (!File.Exists(fileTo))
+            {
+                Console.WriteLine("fileTo: " + fileTo);
+                File.Move(fileFrom, fileTo);
+                return;
+            }
+
+            var buffer = new byte[bufferSize];
+            using (var inStream = new FileStream(fileFrom, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                using (var outStream = new FileStream(fileTo, FileMode.Create, FileAccess.Write, FileShare.Write))
+                {
+                    while (inStream.Position < inStream.Length - buffer.Length)
+                    {
+                        inStream.Read(buffer, 0, buffer.Length);
+                        outStream.Write(buffer, 0, buffer.Length);
+                    }
+
+                    // Copy the remaining part.
+                    buffer = new byte[inStream.Length - inStream.Position];
+                    inStream.Read(buffer, 0, buffer.Length);
+                    outStream.Write(buffer, 0, buffer.Length);
+                }
+            }
+        }
+ 
+
 	}
 }

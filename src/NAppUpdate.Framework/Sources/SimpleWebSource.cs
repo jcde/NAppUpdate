@@ -14,51 +14,37 @@ namespace NAppUpdate.Framework.Sources
 		public SimpleWebSource()
 		{
 			Proxy = null;
-		}
+            SslValidator.OverrideValidation(); //download from https, even if there are no certs in mono/windows store
+        }
 
 		public SimpleWebSource(string feedUrl)
 		{
 			FeedUrl = feedUrl;
 			Proxy = null;
-		}
+            SslValidator.OverrideValidation(); //download from https, even if there are no certs in mono/windows store
+        }
 
 		#region IUpdateSource Members
 
-		/// <summary>
-		/// Speed up web request by trying to use dns to resolve ip address.  If it fails then fail early.
-		/// </summary>
-		/// <returns></returns>
-		private void TryResolvingHost()
-		{
-			var uri = new Uri(FeedUrl);
-			try
-			{
-				Dns.GetHostEntry(uri.Host);
-			}
-			catch (Exception)
-			{
-				throw new WebException(string.Format("Failed to resolve {0}. Check your connectivity.", uri.Host),
-					WebExceptionStatus.ConnectFailure);
-			}
-		}
-
 		public string GetUpdatesFeed()
 		{
-			TryResolvingHost();
+			string data = string.Empty;
 
-			var data = string.Empty;
 			var request = WebRequest.Create(FeedUrl);
-			request.Method = "GET";
 			request.Proxy = Proxy;
 			using (var response = request.GetResponse())
 			{
 				var stream = response.GetResponseStream();
 
-				if (stream != null)
-					using (var reader = new StreamReader(stream, true))
-					{
-						data = reader.ReadToEnd();
-					}
+                if (stream != null)
+                {
+                    using (var reader = new StreamReader(stream, true))
+                    {
+                        data = reader.ReadToEnd();
+                    }
+                    stream.Close();
+                }
+                response.Close();
 			}
 
 			return data;
