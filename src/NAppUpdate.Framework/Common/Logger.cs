@@ -97,7 +97,6 @@ namespace NAppUpdate.Framework.Common
 
 			lock (LogItems)
 			{
-                Console.WriteLine(filePath);
 				using (StreamWriter w = File.CreateText(filePath))
 					foreach (var logItem in LogItems)
 					{

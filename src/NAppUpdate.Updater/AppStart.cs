@@ -98,7 +98,7 @@ namespace NAppUpdate.Updater
 				bool relaunchApp = dto.RelaunchApplication;
                 
                 /// now we can log to a more accessible location
-				/// if (!string.IsNullOrEmpty(dto.AppPath)) logFile = Path.Combine(Path.GetDirectoryName(dto.AppPath), @"NauUpdate.log");
+				if (!string.IsNullOrEmpty(dto.AppPath)) logFile = Path.Combine(Path.GetDirectoryName(dto.AppPath), @"NauUpdate.log");
 
 				if (dto.Tasks == null || dto.Tasks.Count == 0) throw new Exception("Could not find the updates list (or it was empty).");
 
@@ -168,7 +168,8 @@ namespace NAppUpdate.Updater
 					if (p == null) throw new UpdateProcessFailedException("Unable to relaunch application and/or send DTO");
 				}
 
-				Log("All done");
+			    Console.WriteLine();
+				Log("Update was done");
 				//Application.Exit();
 			} catch (Exception ex) {
 				// supressing catch because if at any point we get an error the update has failed
@@ -182,12 +183,9 @@ namespace NAppUpdate.Updater
 
 				if (_args.ShowConsole) {
 					if (_args.Log) {
-						Console.WriteLine();
 						Console.WriteLine("Log file was saved to {0}", logFile);
-						Console.WriteLine();
 					}
-					Console.WriteLine();
-					Console.WriteLine("Exiting."); //Must not read console!
+					Console.WriteLine("Exiting updater."); //Must not read console!
                     //see: http://msdn.microsoft.com/en-us/library/system.console.aspx
                     //Especially:
                     //Console class members that work normally when the underlying stream is directed to a console might 

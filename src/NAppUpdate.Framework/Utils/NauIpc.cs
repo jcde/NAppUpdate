@@ -84,7 +84,7 @@ namespace NAppUpdate.Framework.Utils
             }
 
             File.Delete(paramsFileName);
-            return null;
+            return p;
         }
 
 
