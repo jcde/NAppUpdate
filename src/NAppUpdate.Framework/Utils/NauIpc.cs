@@ -14,10 +14,10 @@ namespace NAppUpdate.Framework.Utils
     ///     Starts the cold update process by extracting the updater app from the library's resources,
     ///     passing it all the data it needs and terminating the current application
     /// </summary>
-    internal static class NauIpc
+    public static class NauIpc
     {
         [Serializable]
-        internal class NauDto
+        public class NauDto
         {
             public NauConfigurations Configs { get; set; }
             public IList<IUpdateTask> Tasks { get; set; }
@@ -88,7 +88,7 @@ namespace NAppUpdate.Framework.Utils
         }
 
 
-        internal static object ReadDto(string syncProcessName)
+        public static object ReadDto(string syncProcessName)
         {
             var paramsFileName = GetAdditionalParamsFileName(syncProcessName);
             if (!File.Exists(paramsFileName))

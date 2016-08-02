@@ -12,7 +12,7 @@
     <AssemblyName>FeedBuilder</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <NoWarn>1591</NoWarn>
@@ -84,6 +84,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\ProductAssemblyInfo.cs">
+      <Link>Properties\ProductAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="ArgumentsParser.cs" />
     <Compile Include="FeedBuilderSettingsProvider.cs" />
     <Compile Include="FileInfoEx.cs" />
@@ -136,7 +139,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

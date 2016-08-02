@@ -33,6 +33,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,6 +61,9 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\ProductAssemblyInfo.cs">
+      <Link>Properties\ProductAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Common\INauFieldsHolder.cs" />
     <Compile Include="Common\Logger.cs" />
     <Compile Include="Common\NauConfigurations.cs" />
@@ -113,6 +117,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="NAppUpdate.Framework.nuspec" />
     <None Include="NAppUpdate.snk" />
     <None Include="Updater\updater.exe" />
   </ItemGroup>
