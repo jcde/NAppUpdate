@@ -122,9 +122,10 @@ namespace FeedBuilder
 		{
 			get
 			{
-				//If we dont hold an xml document, try opening one.  
-				//If it doesnt exist then create a new one ready.
-				if (m_SettingsXML == null)
+                //If we dont hold an xml document, try opening one.  
+                //If it doesnt exist then create a new one ready.
+
+                if (m_SettingsXML == null)
 				{
 					m_SettingsXML = new XmlDocument();
 
@@ -134,16 +135,16 @@ namespace FeedBuilder
 					}
 					catch (Exception)
 					{
-						//Create new document
-						XmlDeclaration dec = m_SettingsXML.CreateXmlDeclaration("1.0", "utf-8", string.Empty);
-						m_SettingsXML.AppendChild(dec);
+                        //Create new document
+                        XmlDeclaration dec = m_SettingsXML.CreateXmlDeclaration("1.0", "utf-8", string.Empty);
+                        m_SettingsXML.AppendChild(dec);
 
-						XmlNode nodeRoot = m_SettingsXML.CreateNode(XmlNodeType.Element, SETTINGSROOT, "");
-						m_SettingsXML.AppendChild(nodeRoot);
-					}
-				}
+                        XmlNode nodeRoot = m_SettingsXML.CreateNode(XmlNodeType.Element, SETTINGSROOT, "");
+                        m_SettingsXML.AppendChild(nodeRoot);
+                    }
+                }
 
-				return m_SettingsXML;
+                return m_SettingsXML;
 			}
 		}
 
@@ -262,7 +263,7 @@ namespace FeedBuilder
 				xmlWriter.Close();
 				node.InnerXml = builder.ToString();
 			}
-			else node.InnerText = propVal.SerializedValue.ToString();
+			else node.InnerText = (propVal.SerializedValue ?? "").ToString();
 		}
 
 		private bool IsRoaming(SettingsProperty prop)
